@@ -1,0 +1,14 @@
+spring:
+  data:
+    mongodb:
+      database: ${MONGO_DATABASE} # Database name
+      port: ${MONGO_PORT} # Database port
+      username: ${MONGO_USER} # Database username
+      password: ${MONGO_PASSWORD} # Database password
+      cluster: ${MONGO_CLUSTER} # Database cluster name
+      authentication-mechanism: SCRAM-SHA-1 # Database authentication mechanism
+      uri: mongodb+srv://${spring.data.mongodb.username}:${spring.data.mongodb.password}@${spring.data.mongodb.cluster}/${spring.data.mongodb.database}?retryWrites=true&w=majority # Database URI
+
+
+
+

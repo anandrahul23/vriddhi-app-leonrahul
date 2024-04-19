@@ -1,0 +1,17 @@
+server:
+  port: 8085
+  servlet:
+    context-path: /mvc
+
+logging:
+  level:
+    springfox:
+      documentation: DEBUG
+
+springfox:
+  documentation:
+    swagger-ui:
+      base-url: /documentation
+    swagger:
+      v2:
+        use-model-v3: false

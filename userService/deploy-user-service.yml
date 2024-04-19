@@ -1,0 +1,14 @@
+---
+- hosts: ansiblehost
+  tasks:
+    - name: stop  the container
+      command: docker stop user-service-app
+      ignore_errors: yes
+    - name: remove the container
+      command: docker rm user-service-app
+      ignore_errors: yes
+    - name: remove the image
+      command: docker rmi leonrahul/userservice:latest
+      ignore_errors: yes
+    - name: create docker service container
+      command: docker run -d --name user-service-app -p 8085:8085 leonrahul/userservice:latest

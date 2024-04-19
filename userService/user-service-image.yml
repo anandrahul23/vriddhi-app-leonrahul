@@ -1,0 +1,9 @@
+---
+- hosts: ansiblehost
+  tasks:
+    - name: create docker image
+      command: docker build -t leonrahul/userservice:latest .
+      args:
+        chdir: /opt/apps/userservice
+    - name: push docker image
+      command: docker push leonrahul/userservice:latest
