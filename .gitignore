@@ -76,4 +76,4 @@ override.tf.json
 .terraformrc
 terraform.rc
 .terraform.lock.hcl
-gcp_key.json
+gcp-key.json

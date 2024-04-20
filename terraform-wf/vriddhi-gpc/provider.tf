@@ -11,8 +11,8 @@ terraform {
 
 provider "google" {
   # Configuration options
-  project = "vriddhi-419806"
-  region = "us-west4"       # London region
-  zone        = "europe-west4-b"   # Nearest zone to London
-  credentials = "gcp_key.json"
+  project = var.project_name
+  region = var.gcp_region       
+  zone        = var.gcp_zone  
+  credentials = file("${path.root}/gcp-key.json")
 }
