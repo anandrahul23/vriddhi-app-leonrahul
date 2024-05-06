@@ -13,14 +13,14 @@ variable "gcp_region" {
 
   description = "gcp region"
   type        = string
-  default     = "us-west4"
+  default     = "us-east1"
 
 }
 
 variable "gcp_zone" {
   description = "gcp region"
   type        = string
-  default     = "us-west4-b"
+  default     = "us-east1-b"
 
 }
 

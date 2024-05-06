@@ -20,7 +20,7 @@ resource "google_compute_instance" "test-compute-engine" {
 
     access_config {
       // Ephemeral IP
-    }
+    } 
   }
 
   service_account {
