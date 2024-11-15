@@ -1,6 +1,9 @@
 import React from 'react';
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 import CustomAccordion from './CustomAccordion';
+import CustomInput from './CustomInput';
+import { useEffect } from 'react';
+import PolygonServer from '../server/PolygonServer';
 
 
 
@@ -23,6 +26,14 @@ export interface CustomTabsProps {
 }
 
 const CustomTabs: React.FC<CustomTabsProps> = (props) => {
+
+    useEffect(() => {
+        const ps = new PolygonServer();
+        ps.getAllTickerDetails().then((data) => {
+            console.log(data);
+        }
+        );
+    }, []);
     return (
         <Tabs>
             <TabList>
@@ -30,6 +41,8 @@ const CustomTabs: React.FC<CustomTabsProps> = (props) => {
                     <Tab key={index}>{wl.title}</Tab>
                 ))}
             </TabList>
+
+            <CustomInput />
 
             <TabPanels>
                 {props.watchlists.map((wl, index) => (

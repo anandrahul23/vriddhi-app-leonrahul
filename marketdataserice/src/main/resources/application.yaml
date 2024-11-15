@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: marketDataService
+  profiles:
+    active: dev
+server:
+    port: 8095
+

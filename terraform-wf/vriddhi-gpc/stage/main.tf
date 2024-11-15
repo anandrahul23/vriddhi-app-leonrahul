@@ -19,6 +19,8 @@ module "k8-cluster" {
   cluster_name = "vriddhi-gke-staging"
   region = "us-east1"
   network = "gke-network-staging"
-  node_count = 1
+  node_count = 2
+  disk_size_gb = 50
+  machine_type = "n1-standard-2"
 }
 

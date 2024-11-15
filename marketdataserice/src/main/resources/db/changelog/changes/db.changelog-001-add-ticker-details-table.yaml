@@ -1,0 +1,173 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-add-ticker-details-table
+      author: rahul
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: ticker_details
+      changes:
+        - createTable:
+            tableName: ticker_details
+            columns:
+              - column:
+                  name: id
+                  type: SERIAL
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: active
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cik
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: composite_figi
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: currency_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_updated_utc
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: locale
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: market
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: primary_exchange
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: share_class_figi
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ticker
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: type
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+      rollback:
+        - dropTable:
+            tableName: ticker_details
+
+  - changeSet:
+      id: 002-add-lastUpdateTime-column
+      author: rahul
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - columnExists:
+                tableName: ticker_details
+                columnName: lastUpdateTime
+      changes:
+        - addColumn:
+            tableName: ticker_details
+            columns:
+              - column:
+                  name: lastUpdateTime
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+      rollback:
+        - dropColumn:
+            columnName: lastUpdateTime
+            tableName: ticker_details
+
+  - changeSet:
+      id: 003-add-index-on-ticker
+      author: rahul
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - indexExists:
+                tableName: ticker_details
+                indexName: idx_ticker
+      changes:
+        - createIndex:
+            tableName: ticker_details
+            indexName: idx_ticker
+            columns:
+              - column:
+                  name: ticker
+      rollback:
+        - dropIndex:
+            indexName: idx_ticker
+            tableName: ticker_details
+
+  - changeSet:
+      id: 004-add-index-on-name
+      author: rahul
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - indexExists:
+                tableName: ticker_details
+                indexName: idx_name
+      changes:
+        - createIndex:
+            tableName: ticker_details
+            indexName: idx_name
+            columns:
+              - column:
+                  name: name
+      rollback:
+        - dropIndex:
+            indexName: idx_name
+            tableName: ticker_details
+
+  - changeSet:
+      id: 005-change-primary-key-to-ticker
+      author: rahul
+      preConditions:
+        - onFail: MARK_RAN
+        - primaryKeyExists:
+            tableName: ticker_details
+            primaryKeyName: ticker_details_pkey
+      changes:
+        - dropPrimaryKey:
+            tableName: ticker_details
+            constraintName: ticker_details_pkey
+        - addPrimaryKey:
+            tableName: ticker_details
+            columnNames: ticker
+            constraintName: ticker_details_pkey
+      rollback:
+        - dropPrimaryKey:
+            tableName: ticker_details
+            constraintName: ticker_details_pkey
+        - addPrimaryKey:
+            tableName: ticker_details
+            columnNames: id
+            constraintName: ticker_details_pkey

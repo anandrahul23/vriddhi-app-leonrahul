@@ -9,3 +9,16 @@ resource "google_compute_firewall" "allow-ssh" {
   source_ranges = ["0.0.0.0/0"]
   
 }
+
+
+resource "google_compute_firewall" "allow-tekton" {
+  name    = "allow-tekton"
+  project = var.project_id
+  network = google_compute_network.gke-network-main.self_link
+  allow {
+    protocol = "tcp"
+    ports    = ["8443"]
+  }
+  source_ranges = ["0.0.0.0/0"]
+  
+}

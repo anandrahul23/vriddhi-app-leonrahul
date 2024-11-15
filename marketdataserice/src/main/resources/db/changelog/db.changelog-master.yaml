@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: classpath:/db/changelog/changes/db.changelog-001-add-ticker-details-table.yaml
+#  - include:
+#      file: changes/db.changelog-002-add-market-data-table.yaml
+#  - include:
+#      file: changes/db.changelog-004-add-columns-to-tables.yaml

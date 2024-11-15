@@ -4,6 +4,7 @@ resource "google_container_cluster" "primary" {
   project  = var.project_id
 
   remove_default_node_pool = true
+  deletion_protection = false
 
   initial_node_count = var.node_count
   network = google_compute_network.gke-network-main.self_link
@@ -18,6 +19,7 @@ resource "google_container_cluster" "primary" {
         disabled =  true
         
     }
+    
 
   }
 release_channel {

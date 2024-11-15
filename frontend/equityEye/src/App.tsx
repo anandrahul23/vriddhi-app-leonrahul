@@ -1,6 +1,6 @@
 import './App.css'
 import CustomTabs from './modules/CustomTabs' 
-import tabProps from './data/TabData'
+import tabProps from './assets/data/TabData'
 
 function App() {
  // const [count, setCount] = useState(0)
