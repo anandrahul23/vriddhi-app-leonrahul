@@ -1,11 +1,14 @@
-FROM tomcat:latest
+# Use a lightweight base image with Zulu OpenJDK 19
+FROM azul/zulu-openjdk-alpine:23
 
-RUN cp -R /usr/local/tomcat/webapps.dist/* /usr/local/tomcat/webapps/
+# Copy the WAR file to the working directory
+COPY ./build/libs/userService-0.0.4-SNAPSHOT.jar /app/userService-0.0.4-SNAPSHOT.jar
 
-COPY ./*.war /usr/local/tomcat/webapps/
+# Set the working directory
+WORKDIR /app
 
-WORKDIR  /usr/local/tomcat/
-
-RUN chmod +x *
+# Expose the required ports
 EXPOSE 8080-8090
-CMD ["/bin/bash", "-c",  "java -jar -Dspring.profiles.active=dev /usr/local/tomcat/webapps/userService-0.0.1-SNAPSHOT.war"]
+
+# Run the application
+CMD ["sh", "-c", "java -jar -Dspring.profiles.active=dev /app/userService-0.0.4-SNAPSHOT.jar"]

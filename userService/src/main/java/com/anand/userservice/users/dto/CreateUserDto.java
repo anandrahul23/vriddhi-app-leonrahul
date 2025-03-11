@@ -1,7 +1,6 @@
 package com.anand.userservice.users.dto;
 
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 

@@ -1,0 +1,7 @@
+# filepath: /Users/rahulanand/Desktop/projects/devops-vriddhi/userService/deployment/staging/replicas-patch.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: user-service-rollout-bluegreen
+spec:
+  replicas: 2

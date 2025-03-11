@@ -1,0 +1,28 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: git-clone-pipeline-run-
+spec:
+  pipelineRef:
+    name: clone-git-repo-pipeline
+  podTemplate:
+    securityContext:
+      fsGroup: 65532
+  workspaces:
+  - name: shared-workspace-git
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+  - name: git-credentials
+    secret:
+      secretName: git-credentials
+    
+  params:
+  - name: repo-url
+    value: https://github.com/anandrahul23/vriddhi-app-leonrahul.git
+  - name: branch
+    value: master

@@ -1,5 +1,7 @@
 package com.anand.marketdataserice.marketDataVendors.entity;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,8 +17,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class TickerDetails {
 
-    @Id
+
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Id
+    @Column("ticker")
+    private String ticker;
+
 
     @Column("active")
     private Boolean active;
@@ -48,12 +55,10 @@ public class TickerDetails {
     @Column("share_class_figi")
     private String shareClassFigi;
 
-    @Column("ticker")
-    private String ticker;
 
     @Column("type")
     private String type;
 
-    @Column("last_update_time")
+    @Column("last_updated_time")
     private LocalDateTime lastUpdateTime;
 }

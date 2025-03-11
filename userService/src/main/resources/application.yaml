@@ -1,1 +1,4 @@
 spring.profiles.active=dev
+logging.level.org.springframework=DEBUG
+logging.level.org.springdoc=DEBUG
+logging.level.org.springframework.web=DEBUG

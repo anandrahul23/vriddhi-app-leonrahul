@@ -14,10 +14,12 @@ class TickersRepositoryTest extends AbstractTest {
     @Test
     void testDataInTickerDetails() {
 
-        tickersRepository.findAll().as(StepVerifier::create)
-                .expectComplete()
-                .verify();
-
+        tickersRepository.findByTicker("NCSM")
+                .as(StepVerifier::create)
+                .assertNext(tickerDetails -> {
+                    assertEquals("NCSM", tickerDetails.getTicker());
+                })
+                .verifyComplete();
     }
 
 }

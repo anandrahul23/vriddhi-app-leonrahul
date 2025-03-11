@@ -1,0 +1,69 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: clone-git-repo-pipeline
+spec:
+  params:
+    - name: repo-url
+      type: string
+      description: user repository url
+    - name: branch
+      type: string
+      description: branch to clone
+    - name: image-reference
+      type: string
+      description: image reference
+  workspaces:
+    - name: shared-workspace-git
+      description: The shared workspace for git
+    
+    - name: git-credentials
+      description: My ssh credentials
+
+  tasks:
+    - name: git-clone-task
+      taskRef:
+        name: git-clone
+      params:
+        - name: url
+          value: $(params.repo-url)
+        # - name: ssh-privatekey
+        #   value: $(workspaces.git-credentials.metadata.ssh-privatekey)
+        - name: revision
+          value: $(params.branch)
+        - name: deleteExisting
+          value: "true"
+      workspaces:
+        - name: output
+          workspace: shared-workspace-git
+        - name: ssh-directory
+          workspace: git-credentials
+
+    - name: show-readme-task
+      runAfter:
+        - git-clone-task
+      taskRef:
+        name: show-readme
+        
+      workspaces:
+        - name: source
+          workspace: shared-workspace-git 
+    - name: list-workspace-content-task
+      runAfter:
+        - show-readme-task
+      taskRef:
+        name: list-workspace-content
+      workspaces:
+        - name: source
+          workspace: shared-workspace-git
+    - name: build-push-image-task
+      runAfter:
+        - list-workspace-content-task
+      taskRef:
+        name: kaniko
+      params:
+        - name: image-reference
+          value: $(params.image-reference)
+      workspaces:
+        - name: source
+          workspace: shared-workspace-git

@@ -6,4 +6,4 @@
       args:
         chdir: /opt/apps/userservice
     - name: push docker image
-      command: docker push leonrahul/userservice:latest
+      command: docker push leonrahul/userser  vice:latest

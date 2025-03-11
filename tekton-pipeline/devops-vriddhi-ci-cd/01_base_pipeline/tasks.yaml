@@ -1,0 +1,36 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: echo-task
+spec:
+  params:
+    - name: message
+      type: string
+      description: The message to echo
+      default: "Hello, World Rahul!"
+  steps:
+    - name: echo-step
+      image: alpine
+      command: ["echo"]
+      args: ["$(params.message)"] 
+
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: git-clone-task
+spec:
+  params:
+    - name: url
+      type: string
+      description: The URL of the git repository
+    - name: branch
+      type: string
+      description: The git branch to checkout
+      #default: "master"
+  steps:
+    - name: git-clone-checkout-step
+      image: alpine/git
+      command: ["git"]
+      args: ["clone", "--branch", "$(params.branch)", "$(params.url)"]
+    

@@ -171,3 +171,211 @@ databaseChangeLog:
             tableName: ticker_details
             columnNames: id
             constraintName: ticker_details_pkey
+
+  - changeSet:
+      id: 006-rename-lastUpdateTime-column
+      author: rahul
+      preConditions:
+        - onFail: MARK_RAN
+        - columnExists:
+            tableName: ticker_details
+            columnName: lastUpdateTime
+      changes:
+        - renameColumn:
+            tableName: ticker_details
+            oldColumnName: lastUpdateTime
+            newColumnName: last_updated_time
+            columnDataType: TIMESTAMP
+      rollback:
+        - renameColumn:
+            tableName: ticker_details
+            oldColumnName: last_updated_time
+            newColumnName: lastUpdateTime
+            columnDataType: TIMESTAMP
+
+  - changeSet:
+      id: 007-make-columns-nullable
+      author: rahul
+      changes:
+        - modifyDataType:
+            tableName: ticker_details
+            columnName: active
+            newDataType: BOOLEAN
+            constraints:
+              nullable: true
+        - modifyDataType:
+            tableName: ticker_details
+            columnName: cik
+            newDataType: VARCHAR(255)
+            constraints:
+              nullable: true
+        - modifyDataType:
+            tableName: ticker_details
+            columnName: composite_figi
+            newDataType: VARCHAR(255)
+            constraints:
+              nullable: true
+        - modifyDataType:
+            tableName: ticker_details
+            columnName: currency_name
+            newDataType: VARCHAR(255)
+            constraints:
+              nullable: true
+        - modifyDataType:
+            tableName: ticker_details
+            columnName: last_updated_utc
+            newDataType: TIMESTAMP
+            constraints:
+              nullable: true
+        - modifyDataType:
+            tableName: ticker_details
+            columnName: locale
+            newDataType: VARCHAR(255)
+            constraints:
+              nullable: true
+        - modifyDataType:
+            tableName: ticker_details
+            columnName: market
+            newDataType: VARCHAR(255)
+            constraints:
+              nullable: true
+        - modifyDataType:
+            tableName: ticker_details
+            columnName: primary_exchange
+            newDataType: VARCHAR(255)
+            constraints:
+              nullable: true
+        - modifyDataType:
+            tableName: ticker_details
+            columnName: share_class_figi
+            newDataType: VARCHAR(255)
+            constraints:
+              nullable: true
+      rollback:
+        - modifyDataType:
+            tableName: ticker_details
+            columnName: active
+            newDataType: BOOLEAN NOT NULL
+        - modifyDataType:
+            tableName: ticker_details
+            columnName: cik
+            newDataType: VARCHAR(255) NOT NULL
+        - modifyDataType:
+            tableName: ticker_details
+            columnName: composite_figi
+            newDataType: VARCHAR(255) NOT NULL
+        - modifyDataType:
+            tableName: ticker_details
+            columnName: currency_name
+            newDataType: VARCHAR(255) NOT NULL
+        - modifyDataType:
+            tableName: ticker_details
+            columnName: last_updated_utc
+            newDataType: TIMESTAMP NOT NULL
+        - modifyDataType:
+            tableName: ticker_details
+            columnName: locale
+            newDataType: VARCHAR(255) NOT NULL
+        - modifyDataType:
+            tableName: ticker_details
+            columnName: market
+            newDataType: VARCHAR(255) NOT NULL
+        - modifyDataType:
+            tableName: ticker_details
+            columnName: primary_exchange
+            newDataType: VARCHAR(255) NOT NULL
+        - modifyDataType:
+            tableName: ticker_details
+            columnName: share_class_figi
+            newDataType: VARCHAR(255) NOT NULL
+
+  - changeSet:
+      id: 008-make-columns-nullable
+      author: rahul
+      changes:
+        - dropNotNullConstraint:
+            tableName: ticker_details
+            columnName: active
+            columnDataType: BOOLEAN
+        - dropNotNullConstraint:
+            tableName: ticker_details
+            columnName: cik
+            columnDataType: VARCHAR(255)
+        - dropNotNullConstraint:
+            tableName: ticker_details
+            columnName: composite_figi
+            columnDataType: VARCHAR(255)
+        - dropNotNullConstraint:
+            tableName: ticker_details
+            columnName: currency_name
+            columnDataType: VARCHAR(255)
+        - dropNotNullConstraint:
+            tableName: ticker_details
+            columnName: last_updated_utc
+            columnDataType: TIMESTAMP
+        - dropNotNullConstraint:
+            tableName: ticker_details
+            columnName: locale
+            columnDataType: VARCHAR(255)
+        - dropNotNullConstraint:
+            tableName: ticker_details
+            columnName: market
+            columnDataType: VARCHAR(255)
+        - dropNotNullConstraint:
+            tableName: ticker_details
+            columnName: primary_exchange
+            columnDataType: VARCHAR(255)
+        - dropNotNullConstraint:
+            tableName: ticker_details
+            columnName: share_class_figi
+            columnDataType: VARCHAR(255)
+      rollback:
+        - addNotNullConstraint:
+            tableName: ticker_details
+            columnName: active
+            columnDataType: BOOLEAN
+        - addNotNullConstraint:
+            tableName: ticker_details
+            columnName: cik
+            columnDataType: VARCHAR(255)
+        - addNotNullConstraint:
+            tableName: ticker_details
+            columnName: composite_figi
+            columnDataType: VARCHAR(255)
+        - addNotNullConstraint:
+            tableName: ticker_details
+            columnName: currency_name
+            columnDataType: VARCHAR(255)
+        - addNotNullConstraint:
+            tableName: ticker_details
+            columnName: last_updated_utc
+            columnDataType: TIMESTAMP
+        - addNotNullConstraint:
+            tableName: ticker_details
+            columnName: locale
+            columnDataType: VARCHAR(255)
+        - addNotNullConstraint:
+            tableName: ticker_details
+            columnName: market
+            columnDataType: VARCHAR(255)
+        - addNotNullConstraint:
+            tableName: ticker_details
+            columnName: primary_exchange
+            columnDataType: VARCHAR(255)
+        - addNotNullConstraint:
+            tableName: ticker_details
+            columnName: share_class_figi
+            columnDataType: VARCHAR(255)
+  - changeSet:
+      id: 009-add-not-null-constraint-on-type
+      author: rahul
+      changes:
+        - addNotNullConstraint:
+            tableName: ticker_details
+            columnName: type
+            columnDataType: VARCHAR(255)
+      rollback:
+        - dropNotNullConstraint:
+            tableName: ticker_details
+            columnName: type
+            columnDataType: VARCHAR(255)

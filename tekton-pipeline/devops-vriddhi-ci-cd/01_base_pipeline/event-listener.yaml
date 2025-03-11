@@ -1,0 +1,11 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: git-listener
+spec:
+  serviceAccountName: default
+  triggers:
+    - bindings:
+      - ref: git-trigger-binding
+      template:
+        ref: git-trigger-template

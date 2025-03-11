@@ -1,0 +1,12 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: git-trigger-binding
+spec:
+  params:
+    - name: event-type
+      value: $(body.event_type)
+    - name: branch
+      value: $(body.ref)
+    - name: repository
+      value: $(body.repository.url)

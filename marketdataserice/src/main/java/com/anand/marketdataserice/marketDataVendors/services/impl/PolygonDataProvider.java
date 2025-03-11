@@ -3,7 +3,6 @@ package com.anand.marketdataserice.marketDataVendors.services.impl;
 import com.anand.marketdataserice.marketDataVendors.config.WebClientProvider;
 import com.anand.marketdataserice.marketDataVendors.services.interfaces.MarketDataProvider;
 import com.anand.marketdataserice.marketDataVendors.services.json.PolygonResponseDto;
-import com.anand.marketdataserice.marketDataVendors.services.json.PolygonTickerDetailsDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -19,15 +18,18 @@ public class PolygonDataProvider implements MarketDataProvider<PolygonResponseDt
     public PolygonDataProvider(WebClientProvider webClientProvider) {
         this.webClientProvider = webClientProvider;
     }
+
     @Override
     public Flux<PolygonResponseDto> getAllTickers() {
 
-        return Flux.range(0, 1)
+
+        return Flux.range(22, 25)
                 .map(i -> (char) ('A' + i))
+               .delayElements(java.time.Duration.ofSeconds(5))
                 .flatMap(this::getTickers)
                 .doOnNext(ticker -> log.info("Received ticker: {}", ticker))
-                .doOnError(throwable -> log.error("Error occurred: {}", throwable.getMessage()));
-
+                .onErrorContinue((throwable, o) ->
+                        log.warn("Error processing but continuing after {}: {}", o, throwable.getMessage()));
     }
 
     private Flux<PolygonResponseDto> getTickers(char tickerStartsWithAlphabet) {
@@ -40,6 +42,8 @@ public class PolygonDataProvider implements MarketDataProvider<PolygonResponseDt
                         .queryParam("sort", "ticker")
                         .queryParam("ticker.gte", tickerStartsWithAlphabet)
                         .queryParam("ticker.lte", (char) (tickerStartsWithAlphabet + 1))
+                        .queryParam("market", "stocks")
+                        //.queryParam("limit", 5)
                         .build())
                 .retrieve().bodyToFlux(PolygonResponseDto.class);
     }

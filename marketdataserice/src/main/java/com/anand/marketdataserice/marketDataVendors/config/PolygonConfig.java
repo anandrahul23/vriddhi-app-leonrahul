@@ -11,6 +11,13 @@ import org.springframework.context.annotation.Configuration;
 public class PolygonConfig implements ExternalDataProviderConfig {
     private String apiKey;
     private String baseUrl;
+    private Schedule schedule;
+
+    @Data
+    public static class Schedule {
+        private boolean load;
+        private String cron;
+    }
 
     @Override
     public String getUri() {
