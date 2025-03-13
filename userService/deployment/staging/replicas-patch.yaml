@@ -2,6 +2,6 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
-  name: user-service-rollout-bluegreen
+  name: user-service-rollout
 spec:
   replicas: 2

@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
-  name: user-service-rollout-bluegreen
+  name: user-service-rollout
  
 spec:
   replicas: 4
@@ -30,7 +30,7 @@ spec:
         tier: backend
     spec:
       containers:
-      - image: leonrahul/userservice:v4
+      - image: leonrahul/userservice:v5
         ports:
           - containerPort: 8085
         name: user-service
