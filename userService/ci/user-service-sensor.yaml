@@ -12,11 +12,8 @@ spec:
 
   triggers:
     - template:
-        name: user-service-ci-trigger
+        name: launch-user-service-ci
         argoWorkflow:
-          group: argoproj.io
-          version: v1alpha1
-          resource: Workflow
           operation: submit
           source:
             resource:
