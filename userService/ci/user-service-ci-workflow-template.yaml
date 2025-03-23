@@ -4,6 +4,7 @@ metadata:
   name: user-service-ci-workflow-template
   namespace: argo-events
 spec:
+  serviceAccountName: operate-workflow-sa
   entrypoint: main
   arguments:
     parameters:
