@@ -38,7 +38,7 @@ public class HelloController {
     public String hello() {
         String podName = getPodName();
         String jarVersion = getJarVersion();
-        return "Hello from User Service root level. This confirms argo rollout is working with blue green strategy. " +
+        return "Hello from User Service level. This confirms argo rollout is working with blue green strategy. " +
                 "Pod Name: " + podName + ", JAR Version: " + jarVersion + " " +
                 instanceInformationService.retrieveInstanceInfo();
     }
@@ -47,7 +47,7 @@ public class HelloController {
     public String welcomeFromHello() {
         String podName = getPodName();
         String jarVersion = getJarVersion();
-        return "Hello from User Service, get mapping hello. This confirms argo rollout is working with blue green strategy "
+        return "Hello from User Service, get mapping hello. Testing ci also , This confirms argo rollout is working with blue green strategy "
                 +
                 "Pod Name: " + podName + ", JAR Version: " + jarVersion + " " +
                 instanceInformationService.retrieveInstanceInfo();
