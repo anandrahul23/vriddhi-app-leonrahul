@@ -4,6 +4,7 @@ metadata:
   name: user-service-sensor
   namespace: argo-events
 spec:
+  serviceAccountName: operate-workflow-sa
   dependencies:
     - name: github-dependency
       eventSourceName: user-service-webhook
