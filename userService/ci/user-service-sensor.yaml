@@ -1,0 +1,45 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: user-service-sensor
+  namespace: argo-events
+spec:
+  dependencies:
+    - name: github-dependency
+      eventSourceName: user-service-webhook
+      eventName: github
+
+  triggers:
+    - template:
+        name: user-service-ci-trigger
+        argoWorkflow:
+          group: argoproj.io
+          version: v1alpha1
+          resource: Workflow
+          operation: submit
+          source:
+            resource:
+              apiVersion: argoproj.io/v1alpha1
+              kind: Workflow
+              metadata:
+                generateName: user-service-ci-
+                namespace: argo-events
+              spec:
+                workflowTemplateRef:
+                  name: user-service-ci-workflow-template
+                arguments:
+                  parameters:
+                  - name : dockerfile
+                    value: "Dockerfile"
+                  - name : image
+                    value: "leonrahul/userservice"
+
+          parameters:
+            - src:
+                dependencyName: github-dependency
+                dataKey: body.ref
+              dest: spec.arguments.parameters.1.value # branch
+            - src:
+                dependencyName: github-dependency
+                dataKey: body.repository.clone_url
+              dest: spec.arguments.parameters.0.value # repo-url

@@ -7,7 +7,7 @@ COPY ./build/libs/userService-0.0.5-SNAPSHOT.jar /app/userService-0.0.5-SNAPSHOT
 # Set the working directory
 WORKDIR /app
 
-# Expose the required ports
+# Expose the requi  red ports
 EXPOSE 8080-8090
 
 # Run the application

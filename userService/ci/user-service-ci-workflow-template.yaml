@@ -1,0 +1,142 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: user-service-ci-workflow-template
+  namespace: argo-events
+spec:
+  entrypoint: main
+  arguments:
+    parameters:
+    - name: repo-url
+      value: "https://github.com/anandrahul23/vriddhi-app-leonrahul.git"
+    - name: branch
+      value: "master"
+    - name: image
+      value: "leonrahul/userservice"
+    - name: dockerfile
+      value: "Dockerfile"
+
+  volumeClaimTemplates:
+  - metadata:
+      name: workspace
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 1200Mi
+
+  volumes:
+  - name: docker-config
+    secret:
+      secretName: docker-registry-creds
+      items:
+        - key: .dockerconfigjson
+          path: config.json
+
+  templates:
+  - name: main
+    inputs:
+      parameters:
+      - name: repo-url
+      - name: branch
+      - name: image
+      - name: dockerfile
+    steps:
+    - - name: clone
+        template: clone
+        arguments:
+          parameters:
+          - name: repo-url
+            value: "{{inputs.parameters.repo-url}}"
+          - name: branch
+            value: "{{inputs.parameters.branch}}"
+    - - name: build
+        template: build
+    # - - name: test
+    #     template: test
+    - - name: imagebuild
+        template: imagebuild
+        arguments:
+          parameters:
+          - name: commit-sha
+            value: "{{steps.clone.outputs.parameters.commit-sha}}"
+          - name: image
+            value: "{{inputs.parameters.image}}"
+          - name: dockerfile
+            value: "{{inputs.parameters.dockerfile}}"
+
+  # Clone task
+  - name: clone
+    inputs:
+      parameters:
+      - name: repo-url
+      - name: branch
+    script:
+      image: alpine/git
+      command: [sh]
+      source: |
+        #!/bin/sh
+        git clone --branch {{inputs.parameters.branch}} {{inputs.parameters.repo-url}} /workspace
+        cd /workspace
+        COMMIT_SHA=$(git rev-parse --short HEAD)
+        echo $COMMIT_SHA > /workspace/commit-sha.txt
+      volumeMounts:
+      - name: workspace
+        mountPath: /workspace
+    outputs:
+      parameters:
+      - name: commit-sha
+        valueFrom:
+          path: /workspace/commit-sha.txt
+
+
+  # Build task (Java/Gradle with Zulu OpenJDK 23)
+  - name: build
+    script:
+      image: azul/zulu-openjdk-alpine:23 # Use the same image for consistency
+      command: ["sh"]
+      source: |
+        #!/bin/sh
+        cd /workspace/userService/
+        ./gradlew clean build # or ./gradlew clean bootJar if you are using spring boot.
+      volumeMounts:
+      - name: workspace
+        mountPath: /workspace
+
+  # # Test task
+  # - name: test
+  #   script:
+  #     image: python:3.9
+  #     command: ["sh"]
+  #     source: |
+  #       #!/bin/sh
+  #       cd /workspace
+  #       pip install nose
+  #       nosetests
+  #     volumeMounts:
+  #     - name: workspace
+  #       mountPath: /workspace
+
+  # Image build and publish task using Kaniko
+  - name: imagebuild
+    inputs:
+      parameters:
+      - name: commit-sha
+      - name: image
+      - name: dockerfile
+    container:
+      image: gcr.io/kaniko-project/executor:latest
+      command: ["/kaniko/executor"]
+      args:
+      - --dockerfile=/workspace/userService/{{inputs.parameters.dockerfile}}
+      - --context=/workspace/userService/
+      - --destination={{inputs.parameters.image}}:{{inputs.parameters.commit-sha}}
+      - --force
+      volumeMounts:
+      - name: workspace
+        mountPath: /workspace
+      - name: docker-config
+        mountPath: /kaniko/.docker
+      env:
+      - name: DOCKER_CONFIG
+        value: /kaniko/.docker

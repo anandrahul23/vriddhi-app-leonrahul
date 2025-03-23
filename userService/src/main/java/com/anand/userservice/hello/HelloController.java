@@ -25,8 +25,7 @@ public class HelloController {
         String version = "unknown";
         try {
             Manifest manifest = new Manifest(
-                    getClass().getClassLoader().getResourceAsStream("META-INF/MANIFEST.MF")
-            );
+                    getClass().getClassLoader().getResourceAsStream("META-INF/MANIFEST.MF"));
             Attributes attr = manifest.getMainAttributes();
             version = attr.getValue("Implementation-Version");
         } catch (IOException e) {
@@ -39,7 +38,7 @@ public class HelloController {
     public String hello() {
         String podName = getPodName();
         String jarVersion = getJarVersion();
-        return "Hello from Rahul Anand root level. This confirms argo rollout is working with blue green strategy. " +
+        return "Hello from User Service root level. This confirms argo rollout is working with blue green strategy. " +
                 "Pod Name: " + podName + ", JAR Version: " + jarVersion + " " +
                 instanceInformationService.retrieveInstanceInfo();
     }
@@ -48,7 +47,8 @@ public class HelloController {
     public String welcomeFromHello() {
         String podName = getPodName();
         String jarVersion = getJarVersion();
-        return "Hello from Rahul Anand, get mapping hello. This confirms argo rollout is working with blue green strategy " +
+        return "Hello from User Service, get mapping hello. This confirms argo rollout is working with blue green strategy "
+                +
                 "Pod Name: " + podName + ", JAR Version: " + jarVersion + " " +
                 instanceInformationService.retrieveInstanceInfo();
     }
