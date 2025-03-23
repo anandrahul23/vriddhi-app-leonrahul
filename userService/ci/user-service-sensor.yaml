@@ -31,13 +31,17 @@ spec:
                     value: "Dockerfile"
                   - name : image
                     value: "leonrahul/userservice"
+                  - name : repo-url
+                    value: "https://github.com/anandrahul23/vriddhi-app-leonrahul.git"
+                  - name : branch
+                    value: "master"
 
-          parameters:
-            - src:
-                dependencyName: github-dependency
-                dataKey: body.payload.ref
-              dest: spec.arguments.parameters.1.value # branch
-            - src:
-                dependencyName: github-dependency
-                dataKey: body.repo.url
-              dest: spec.arguments.parameters.0.value # repo-url
+          # parameters:
+          #   - src:
+          #       dependencyName: github-dependency
+          #       dataKey: body.payload.ref
+          #     dest: spec.arguments.parameters.1.value # branch
+          #   - src:
+          #       dependencyName: github-dependency
+          #       dataKey: body.repo.url
+          #     dest: spec.arguments.parameters.0.value # repo-url
