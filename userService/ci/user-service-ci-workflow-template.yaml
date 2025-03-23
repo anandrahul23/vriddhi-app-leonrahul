@@ -4,6 +4,7 @@ metadata:
   name: user-service-ci-workflow-template
   namespace: argo-events
 spec:
+# Define the entrypoint for the workflow
   entrypoint: main
   arguments:
     parameters:
