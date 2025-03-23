@@ -37,9 +37,9 @@ spec:
           parameters:
             - src:
                 dependencyName: github-dependency
-                dataKey: body.ref
+                dataKey: body.payload.ref
               dest: spec.arguments.parameters.1.value # branch
             - src:
                 dependencyName: github-dependency
-                dataKey: body.repository.clone_url
+                dataKey: body.repo.url
               dest: spec.arguments.parameters.0.value # repo-url

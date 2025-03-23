@@ -33,6 +33,7 @@ spec:
               # Extract the latest event from the master branch
               echo "Filtering the latest event from the master branch..."
               LATEST_EVENT=$(echo "$RESPONSE" | jq '[.[] | select(.payload.ref == "refs/heads/master")][0]')
+              echo "Latest Event: $LATEST_EVENT"
 
               # Extract the commit ID from the latest event
               LATEST_COMMIT=$(echo "$LATEST_EVENT" | jq -r '.payload.head')
