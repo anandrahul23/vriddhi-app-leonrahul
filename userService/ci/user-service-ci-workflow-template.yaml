@@ -6,6 +6,7 @@ metadata:
 spec:
 # Define the entrypoint for the workflow
   entrypoint: main
+  serviceAccountName: default
   arguments:
     parameters:
     - name: repo-url
