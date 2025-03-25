@@ -4,3 +4,7 @@ resources:
 - rollout.yaml
 - service.yaml
 - preview-service.yaml
+images:
+- name: leonrahul/userservice
+  newName: leonrahul/userservice
+  newTag: 9c65f0d
