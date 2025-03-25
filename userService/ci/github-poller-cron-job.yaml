@@ -17,38 +17,49 @@ spec:
             - /bin/sh
             - -c
             - |
-              # Install jq
-              # apk add --no-cache jq
+              #!/bin/sh
 
-              # Fetch GitHub events
-              echo "Fetching GitHub events..."
-              RESPONSE=$(curl -s -H "Authorization: token $(cat /etc/github-token/github-token)" \
-                                -H "Accept: application/vnd.github.v3+json" \
-                                https://api.github.com/repos/anandrahul23/vriddhi-app-leonrahul/events)
+              set -e # Exit immediately if a command exits with a non-zero status
+
+              echo "Fetching latest commit from GitHub (Commits API)..."
+
+              # Fetch the latest commit from the master branch using the Commits API
+              COMMIT_RESPONSE=$(curl -s -H "Authorization: token $(cat /etc/github-token/github-token)" \
+                                     -H "Accept: application/vnd.github.v3+json" \
+                                     "https://api.github.com/repos/anandrahul23/vriddhi-app-leonrahul/commits/master")
+
+              # Check for rate limiting
+              if echo "$COMMIT_RESPONSE" | jq -e '.message | contains("API rate limit exceeded")' > /dev/null; then
+                echo "Rate limit exceeded. Exiting."
+                exit 1
+              fi
+
+              # Check for errors in the response (e.g., 404 Not Found)
+              if echo "$COMMIT_RESPONSE" | jq -e '.message' > /dev/null; then
+                echo "Error fetching commit: $(echo "$COMMIT_RESPONSE" | jq -r '.message')"
+                exit 1
+              fi
 
               # Log the full response
-              echo "GitHub Events Response:"
-              echo "$RESPONSE"
+              echo "GitHub Commits Response:"
+              echo "$COMMIT_RESPONSE"
 
-              # Extract the latest event from the master branch
-              echo "Filtering the latest event from the master branch..."
-              LATEST_EVENT=$(echo "$RESPONSE" | jq '[.[] | select(.payload.ref == "refs/heads/master")][0]')
-              echo "Latest Event: $LATEST_EVENT"
-
-              # Extract the commit ID from the latest event
-              LATEST_COMMIT=$(echo "$LATEST_EVENT" | jq -r '.payload.head')
+              # Extract the latest commit ID
+              LATEST_COMMIT=$(echo "$COMMIT_RESPONSE" | jq -r '.sha')
               echo "Latest Commit ID: $LATEST_COMMIT"
-
 
               # Check if the commit ID has changed
               echo "Checking for changes in the commit ID..."
               PREVIOUS_COMMIT=$(cat /data/previous_commit 2>/dev/null || echo "")
               echo "Previous Commit ID: $PREVIOUS_COMMIT"
+
               if [ "$LATEST_COMMIT" != "$PREVIOUS_COMMIT" ]; then
-                echo "New commit detected. Publishing the latest event to the webhook..."
-                echo "$LATEST_EVENT" | curl -s -X POST -H "Content-Type: application/json" -d @- \
+                echo "New commit detected. Publishing the event to the webhook..."
+                # Create a dummy event for the webhook
+                EVENT=$(echo "{\"commit_id\": \"$LATEST_COMMIT\"}")
+                echo "$EVENT" | curl -s -X POST -H "Content-Type: application/json" -d @- \
                                       http://user-service-webhook-eventsource-svc.argo-events.svc.cluster.local:12000/github
-                echo "Latest event published successfully."
+                echo "Event published successfully."
 
                 # Save the latest commit ID for future comparisons
                 echo "$LATEST_COMMIT" > /data/previous_commit
