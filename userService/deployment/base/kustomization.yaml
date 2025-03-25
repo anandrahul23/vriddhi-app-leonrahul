@@ -7,4 +7,4 @@ resources:
 images:
 - name: leonrahul/userservice
   newName: leonrahul/userservice
-  newTag: b3384a4
+  newTag: 4c0f1d6
