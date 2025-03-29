@@ -77,5 +77,5 @@ override.tf.json
 terraform.rc
 .terraform.lock.hcl
 gcp-key.json
-*application*.yaml
 userService/deployment
+application-dev.yaml
